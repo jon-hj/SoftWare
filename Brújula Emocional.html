@@ -1,0 +1,232 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Brújula Emocional</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&display=swap">
+<style>
+/* Layout: una columna centrada, una pregunta por pantalla, escala de 5 opciones grandes y táctiles */
+:root{
+  --bg:#eef3f4; --surface:#ffffff; --ink:#18303a; --muted:#56707a; --line:#d3e0e3;
+  --accent:#2c6e7f; --accent-soft:#dcecef; --accent-ink:#ffffff;
+  --ok:#3d8a5f; --mild:#b58a1e; --mod:#c4662a; --high:#b23a48;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1b20; --surface:#172830; --ink:#e3eef0; --muted:#9db4bb; --line:#2a414a;
+  --accent:#6fb8c9; --accent-soft:#1f3a43; --accent-ink:#0f1b20;
+  --ok:#6cc391; --mild:#e0b84f; --mod:#ec935a; --high:#ec7584; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1b20; --surface:#172830; --ink:#e3eef0; --muted:#9db4bb; --line:#2a414a;
+  --accent:#6fb8c9; --accent-soft:#1f3a43; --accent-ink:#0f1b20;
+  --ok:#6cc391; --mild:#e0b84f; --mod:#ec935a; --high:#ec7584; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;
+  padding-block:32px 48px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1,h2{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(1.9rem,6vw,2.6rem);font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.45rem;font-weight:700}
+p{margin:0}
+.eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(20px,5vw,32px);display:flex;flex-direction:column;gap:18px}
+.lead{color:var(--muted);max-width:60ch}
+ul.facts{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px;color:var(--muted)}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:14px 22px;font-weight:700;font-size:1rem}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--line)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.progress{height:8px;background:var(--accent-soft);border-radius:99px;overflow:hidden}
+.progress span{display:block;height:100%;background:var(--accent);width:0;transition:width .3s ease}
+.qmeta{display:flex;justify-content:space-between;font-size:.88rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.stem{color:var(--muted);font-size:.95rem}
+.qtext{font-family:var(--f-display);font-size:clamp(1.3rem,4.6vw,1.6rem);font-weight:500;line-height:1.3;text-wrap:balance}
+.opts{display:grid;gap:10px}
+.opt{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:12px;text-align:left;background:var(--surface);color:var(--ink);
+  border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--accent)}
+.opt[aria-checked="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.opt .k{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums}
+.opt[aria-checked="true"] .k{background:var(--accent);color:var(--accent-ink)}
+.opt small{color:var(--muted);font-size:.82rem;font-variant-numeric:tabular-nums}
+.hint{font-size:.85rem;color:var(--muted)}
+/* resultados */
+.verdict{display:flex;flex-direction:column;gap:10px;border-left:6px solid var(--c);padding-left:16px}
+.verdict .lvl{font-family:var(--f-display);font-size:1.8rem;font-weight:700;color:var(--c);line-height:1.1}
+.score{font-variant-numeric:tabular-nums;color:var(--muted)}
+.gauge{position:relative;height:14px;border-radius:99px;background:linear-gradient(90deg,var(--ok) 0 25%,var(--mild) 25% 50%,var(--mod) 50% 75%,var(--high) 75% 100%);opacity:.9}
+.gauge i{position:absolute;top:-5px;width:4px;height:24px;background:var(--ink);border-radius:2px;transform:translateX(-50%)}
+.gscale{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.dims{display:flex;flex-direction:column;gap:14px}
+.dim{display:grid;grid-template-columns:1fr auto;gap:4px 12px}
+.dim b{font-weight:700}
+.dim .tag{font-size:.78rem;font-weight:700;padding:2px 10px;border-radius:99px;border:1.5px solid var(--c);color:var(--c);align-self:center}
+.dim .bar{grid-column:1/-1;height:8px;border-radius:99px;background:var(--accent-soft);overflow:hidden}
+.dim .bar span{display:block;height:100%;background:var(--c)}
+.dim p{grid-column:1/-1;color:var(--muted);font-size:.9rem}
+.help{background:var(--accent-soft);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.help strong{font-family:var(--f-display);font-size:1.1rem}
+.help ul{margin:0;padding-left:1.1em}
+.foot{font-size:.8rem;color:var(--muted);max-width:60ch}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <!-- INTRO -->
+  <section id="intro" class="card" aria-labelledby="t-intro">
+    <span class="eyebrow">Autoevaluación · 17 preguntas · 4 minutos</span>
+    <h1 id="t-intro">Brújula Emocional</h1>
+    <p class="lead">Este cuestionario explora cómo manejas tus emociones cuando algo te altera. Está basado en las cinco dimensiones de la escala DERS-16. Al final verás una clasificación orientativa y un perfil por áreas.</p>
+    <ul class="facts">
+      <li>Piensa en cómo te has sentido en las últimas semanas.</li>
+      <li>No hay respuestas buenas ni malas. Responde lo primero que te venga a la mente.</li>
+      <li>Tus respuestas no se guardan ni se envían a ningún lugar.</li>
+    </ul>
+    <div class="row"><button class="btn" id="start">Comenzar</button><span class="hint">Puedes responder con las teclas 1 a 5.</span></div>
+  </section>
+
+  <!-- PREGUNTAS -->
+  <section id="quiz" class="card" hidden aria-live="polite">
+    <div class="qmeta"><span id="qnum">Pregunta 1 de 17</span><span id="qdim"></span></div>
+    <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+    <p class="stem" id="stem"></p>
+    <p class="qtext" id="qtext"></p>
+    <div class="opts" id="opts" role="radiogroup" aria-labelledby="qtext"></div>
+    <div class="row">
+      <button class="btn ghost" id="prev">Anterior</button>
+      <button class="btn" id="next" disabled>Siguiente</button>
+    </div>
+  </section>
+
+  <!-- RESULTADOS -->
+  <section id="result" hidden class="wrap" style="gap:20px"></section>
+</div>
+
+<script>
+const SCALE = [
+  {v:1,t:"Casi nunca",p:"0–10 %"},{v:2,t:"Algunas veces",p:"11–35 %"},
+  {v:3,t:"La mitad de las veces",p:"36–65 %"},{v:4,t:"La mayoría de las veces",p:"66–90 %"},
+  {v:5,t:"Casi siempre",p:"91–100 %"}
+];
+const DIMS = {
+  claridad:{n:"Claridad emocional",d:"Entender qué estás sintiendo.",hi:"Puede costarte ponerle nombre a lo que sientes."},
+  metas:{n:"Concentración en metas",d:"Seguir con tus tareas cuando estás alterado/a.",hi:"Las emociones intensas suelen interrumpir lo que estás haciendo."},
+  impulsos:{n:"Control de impulsos",d:"Manejar tu conducta bajo malestar.",hi:"Bajo malestar, puedes actuar de formas que luego lamentas."},
+  estrategias:{n:"Estrategias de regulación",d:"Confiar en que puedes sentirte mejor.",hi:"Puede que sientas que no tienes herramientas para calmarte."},
+  aceptacion:{n:"Aceptación emocional",d:"Permitirte sentir sin juzgarte.",hi:"Tiendes a juzgarte o culparte por lo que sientes."}
+};
+const STEM_G = "Cuando estoy alterado/a…";
+// Ítems redactados a partir de las dimensiones de la DERS-16 (orden original 1–16)
+const Q = [
+  {d:"claridad",s:"",t:"Me cuesta entender qué es lo que estoy sintiendo."},
+  {d:"claridad",s:"",t:"Me siento confundido/a respecto a mis propias emociones."},
+  {d:"metas",t:"me cuesta terminar lo que estaba haciendo."},
+  {d:"impulsos",t:"siento que las cosas se me salen de control."},
+  {d:"estrategias",t:"pienso que me voy a sentir así durante mucho tiempo."},
+  {d:"estrategias",t:"pienso que terminaré sintiéndome muy decaído/a."},
+  {d:"metas",t:"se me hace difícil enfocarme en otra cosa."},
+  {d:"impulsos",t:"me cuesta controlar lo que hago."},
+  {d:"aceptacion",t:"me siento culpable por sentirme así."},
+  {d:"aceptacion",t:"me da vergüenza sentirme así."},
+  {d:"impulsos",t:"hago cosas impulsivamente y después me arrepiento."},
+  {d:"estrategias",t:"creo que no hay nada que pueda hacer para sentirme mejor."},
+  {d:"aceptacion",t:"me enojo conmigo mismo/a por sentirme así."},
+  {d:"estrategias",t:"siento que mis emociones me desbordan."},
+  {d:"metas",t:"me cuesta pensar con claridad."},
+  {d:"estrategias",t:"creo que no voy a encontrar la manera de calmarme."}
+].map(q=>({...q,s:q.s===""?"En general…":STEM_G}));
+const MOOD = {mood:true,s:"Para terminar",t:"¿Cómo describirías tu estado de ánimo general en las últimas dos semanas?",
+  opts:[{v:5,t:"Muy bien"},{v:4,t:"Bien"},{v:3,t:"Regular"},{v:2,t:"Mal"},{v:1,t:"Muy mal"}]};
+const ALL = [...Q, MOOD];
+const ans = new Array(ALL.length).fill(null);
+let i = 0;
+
+const $ = id => document.getElementById(id);
+function render(){
+  const q = ALL[i];
+  $("qnum").textContent = `Pregunta ${i+1} de ${ALL.length}`;
+  $("qdim").textContent = q.mood ? "Ánimo general" : DIMS[q.d].n;
+  $("bar").style.width = `${(i/ALL.length)*100}%`;
+  $("stem").textContent = q.s;
+  $("qtext").textContent = q.t;
+  const opts = q.mood ? q.opts : SCALE;
+  $("opts").innerHTML = "";
+  opts.forEach((o,k)=>{
+    const b = document.createElement("button");
+    b.type="button"; b.className="opt"; b.id=`o${k}`;
+    b.setAttribute("role","radio"); b.setAttribute("aria-checked", ans[i]===o.v);
+    b.innerHTML = `<span class="k">${k+1}</span><span>${o.t}</span><small>${o.p||""}</small>`;
+    b.onclick = ()=>{ ans[i]=o.v; render(); setTimeout(()=>{ if(i<ALL.length-1){i++;render();} },220); };
+    $("opts").appendChild(b);
+  });
+  $("prev").disabled = i===0;
+  $("next").disabled = ans[i]===null;
+  $("next").textContent = i===ALL.length-1 ? "Ver resultados" : "Siguiente";
+}
+$("start").onclick = ()=>{ $("intro").hidden=true; $("quiz").hidden=false; render(); $("o0").focus(); };
+$("prev").onclick = ()=>{ if(i>0){i--;render();} };
+$("next").onclick = ()=>{ if(ans[i]===null) return; if(i<ALL.length-1){i++;render();} else showResult(); };
+document.addEventListener("keydown",e=>{
+  if($("quiz").hidden) return;
+  const n = parseInt(e.key,10);
+  if(n>=1&&n<=5){ document.getElementById(`o${n-1}`)?.click(); }
+});
+
+function level(total){
+  if(total<=32) return {k:"ok",n:"Regulación adecuada",t:"Por lo general manejas bien tus emociones, incluso cuando algo te altera. Seguir cuidando tus hábitos de descanso, apoyo social y autocuidado te ayudará a mantenerlo."};
+  if(total<=48) return {k:"mild",n:"Dificultades leves",t:"En algunas situaciones te cuesta regular lo que sientes. Es algo común. Revisar las áreas marcadas abajo puede darte pistas sobre qué fortalecer."};
+  if(total<=64) return {k:"mod",n:"Dificultades moderadas",t:"Las emociones intensas parecen afectar con frecuencia tu bienestar o tu día a día. Hablar con un profesional de psicología podría ayudarte a desarrollar herramientas concretas."};
+  return {k:"high",n:"Dificultades marcadas",t:"Tus respuestas indican que manejar las emociones te resulta muy difícil la mayor parte del tiempo. Te recomendamos buscar acompañamiento profesional pronto. No tienes que hacerlo solo/a."};
+}
+function dimLevel(m){ return m>=3.5?{k:"high",n:"Alta dificultad"}:m>=2.5?{k:"mild",n:"Dificultad media"}:{k:"ok",n:"Fortaleza"}; }
+
+function showResult(){
+  $("bar").style.width="100%";
+  const total = Q.reduce((s,_,k)=>s+ans[k],0);
+  const mood = ans[ALL.length-1];
+  const L = level(total);
+  const pct = ((total-16)/64)*100;
+  const by = {}; Q.forEach((q,k)=>{(by[q.d] ||= []).push(ans[k]);});
+  const dimsHtml = Object.entries(DIMS).map(([key,D])=>{
+    const arr = by[key]; const m = arr.reduce((a,b)=>a+b,0)/arr.length; const dl = dimLevel(m);
+    return `<div class="dim" style="--c:var(--${dl.k})"><b>${D.n}</b><span class="tag">${dl.n}</span>
+      <div class="bar"><span style="width:${((m-1)/4)*100}%"></span></div>
+      <p>${dl.k==="ok"?D.d+" Es un punto a tu favor.":D.hi} <span class="score">Promedio ${m.toFixed(1)} / 5</span></p></div>`;
+  }).join("");
+  const moodTxt = ["","muy mal","mal","regular","bien","muy bien"][mood];
+  const needHelp = L.k==="high" || L.k==="mod" || mood<=2;
+  $("quiz").hidden = true;
+  const R = $("result"); R.hidden = false;
+  R.innerHTML = `
+  <div class="card">
+    <span class="eyebrow">Tu resultado</span>
+    <div class="verdict" style="--c:var(--${L.k})">
+      <span class="lvl">${L.n}</span>
+      <span class="score">Puntaje total: ${total} de 80 · Ánimo reciente: ${moodTxt}</span>
+      <p>${L.t}</p>
+    </div>
+    <div>
+      <div class="gauge" role="img" aria-label="Puntaje ${total} en una escala de 16 a 80"><i style="left:${pct}%"></i></div>
+      <div class="gscale"><span>16</span><span>32</span><span>48</span><span>64</span><span>80</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Tu perfil por áreas</h2>
+    <div class="dims">${dimsHtml}</div>
+  </div>
+  ${needHelp?`<div class="help">
+    <strong>Busca apoyo</strong>
+    <p>Hablar con alguien de confianza o con un profesional puede hacer una gran diferencia. En Colombia puedes comunicarte con:</p>
+    <ul><li>Línea 106 (Bogotá), atención psicológica gratuita.</li><li>Línea 192, opción 4, orientación en salud mental a nivel nacional.</li><li>Línea 123 si estás en riesgo inmediato.</li></ul>
+  </div>`:""}
+  <div class="row"><button class="btn ghost" id="restart">Responder de nuevo</button></div>
+  <p class="foot">Esta herramienta es orientativa y no constituye un diagnóstico. Los ítems son una redacción adaptada a partir de las dimensiones de la DERS-16 (Bjureberg et al., 2016) y no reemplazan la versión validada. Los rangos de clasificación son de referencia y no son puntos de corte clínicos.</p>`;
+  $("restart").onclick = ()=>{ ans.fill(null); i=0; R.hidden=true; $("intro").hidden=false; window.scrollTo(0,0); };
+  window.scrollTo(0,0);
+}
+</script>
+
+</body></html>
